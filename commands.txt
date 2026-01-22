@@ -1,0 +1,9 @@
+docker build -t kobigdocker/api .
+
+
+
+oc login --token=...
+oc apply -f .
+oc get pods
+oc expose service <service name>
+oc get route
