@@ -1,5 +1,7 @@
 from fastapi import APIRouter, UploadFile
 import shutil
+import python_multipart
+import pandas as pd
 
 router = APIRouter()
 
@@ -25,3 +27,5 @@ def upload_file(file: UploadFile):
             df = pd.read_excel(filepath)
     except:
         return 401, "File is not proper"
+
+    return df
