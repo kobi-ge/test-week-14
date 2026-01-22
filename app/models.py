@@ -1,7 +1,10 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("weapons_list.csv")
+
+def load_csv():
+    df = pd.read_csv("data\weapons_list.csv")
+    return df
 
 def add_risk_level(df):
     bins = [0, 20, 100, 300, np.inf]
@@ -12,3 +15,4 @@ def add_risk_level(df):
 def clean_null(df):
     df = df.fillna("unknown")
     return df
+
