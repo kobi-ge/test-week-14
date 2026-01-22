@@ -7,7 +7,6 @@ from models import *
 def manager():
     df = load_csv()
     newdf = add_risk_level(df)
-    print(df.columns)
     clean_df = clean_null(newdf)
     create_table(db, table_name)
     res = insert_df(clean_df, table_name)
