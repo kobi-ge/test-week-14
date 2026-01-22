@@ -29,3 +29,19 @@ def upload_file(file: UploadFile):
         return 401, "File is not proper"
 
     return df
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
