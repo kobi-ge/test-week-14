@@ -3,6 +3,9 @@ import shutil
 import python_multipart
 import pandas as pd
 
+from models import *
+from load_db import *
+
 router = APIRouter()
 
 @router.post("upload")
@@ -30,6 +33,13 @@ def upload_file(file: UploadFile):
 
     return df
 
+def manager():
+    df = load_csv()
+    df = add_risk_level(df)
+    df = clean_null(df)
+    create_table(db, table_name)
+    res = insert_df(df, table_name)
+    return res
 
 
 

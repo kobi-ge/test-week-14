@@ -2,11 +2,19 @@ import time
 import pandas as pd
 
 from db import DBManager
+from models import *
 
-df = pd.read_csv("data\weapons_list.csv")
+def manager():
+    df = load_csv()
+    newdf = add_risk_level(df)
+    print(df.columns)
+    clean_df = clean_null(newdf)
+    create_table(db, table_name)
+    res = insert_df(clean_df, table_name)
+    return res
 
 db = DBManager()
-table_name = "weapons"
+table_name = "weapons_table"
 
 def create_table(db, table_name):
     schema = """
@@ -20,32 +28,21 @@ def create_table(db, table_name):
         origin_country VARCHAR(30),
         storage_location VARCHAR(30),
         year_estimated INT,
-        level_risk VARCHAR(30)
+        risk_level VARCHAR(30)
     """
     return db.create_table(table_name, schema)
 
 def insert_df(df, table_name):
-    columns = "(weapon_id, weapon_name, weapon_type, range_km, weight_kg, manufacturer, origin_country, storage_location, year_estimated, level_risk)"
+    columns = "(weapon_id, weapon_name, weapon_type, range_km, weight_kg, manufacturer, origin_country, storage_location, year_estimated, risk_level)"
     values = "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    row_count = 0
     for index, row in df.iterrows():
         query = f"INSERT INTO {table_name} {columns} VALUES {values}"
-        db.cursor.execute(query, row)
+        row = (row['weapon_id'], row['weapon_name'], row['weapon_type'], row['range_km'], row['weight_kg'], row['manufacturer'], row['origin_country'], row['storage_location'], row['year_estimated'], row['risk_level'])
+        db.insert(query, row)
+        row_count += 1
+    return {
+        "status": "success",
+        "inserted_records": row_count   
+        }
 
-print(create_table(db, table_name))
-insert_df(df, table_name)
-# users_schema = """
-#     id INT AUTO_INCREMENT PRIMARY KEY,
-#     username VARCHAR(50) NOT NULL,
-#     role VARCHAR(20) DEFAULT 'student'
-# """
-# db.create_table("users", users_schema)
-
-# sql = "INSERT INTO users (username, role) VALUES (%s, %s)"
-# db.execute_insert(sql, ("Yossi_Cohen", "Admin"))
-
-# print("app is running...")
-# try:
-#     while True:
-#         time.sleep(60)
-# except KeyboardInterrupt:
-#     db.close()
