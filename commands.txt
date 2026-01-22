@@ -1,4 +1,5 @@
-docker build -t kobigdocker/api .
+docker build -t kobigdocker/api:v1 .
+docker push kobigdocker/api:v1      
 
 
 
